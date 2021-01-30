@@ -7,13 +7,7 @@ window.addEventListener('unload', function () {
     });
 });
 
-const POPUP_STATES = Object.freeze({
-    signIn: 'SIGN_IN',
-    product: 'PRODUCT',
-});
-
-let popUpState = POPUP_STATES.signIn;
-let user = {};
+let user;
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     console.log("received " + msg.type);
@@ -25,14 +19,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             user = {
                 email: msg.value.email
             };
-            popUpState = POPUP_STATES.product;
-            chrome.runtime.sendMessage({ popUpState });
+            chrome.runtime.sendMessage({ type: 'USER_UPDATED', user: user });
             break;
         case 'GET_USER':
             sendResponse(user);
-            break;
-        case 'GET_POPUP_STATE':
-            sendResponse(popUpState);
             break;
         default:
             console.error("unrecognised message: ", msg);
