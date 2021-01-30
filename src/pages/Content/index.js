@@ -1,6 +1,7 @@
 import { printLine } from './modules/print';
 
-let products = [];
+const proxyUrl = 'https://tranquil-oasis-83912.herokuapp.com';
+const products = [];
 
 const updateBadge = () => {
     chrome.runtime.sendMessage({ type: "SET_BADGE_TEXT", value: products.length > 0 ? products.length.toString() : "" });
@@ -14,7 +15,7 @@ const getQuery = (document) => {
     return index == -1 ? videoTitle : videoTitle.substring(0, index);
 }
 
-const getProductLink = (Q) => {
+const getProductLinks = (Q) => {
     const KEY = 'AIzaSyD747F8Wq4bALPlpafh3-sU9t3fNtaKT5U';
     const CX = 'f013e1116c6108d66';
 
@@ -22,15 +23,12 @@ const getProductLink = (Q) => {
         method: 'GET',
     }
 
-    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=1`, init)
+    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=5`, init)
         .then(res => {
-            console.log(res)
             return new Response(res.body).json()
         })
         .then(res => {
-            console.log(res.items)
-
-            return res.items[0].link;
+            return res.items.map(item => item.link);
         })
         .catch((e) => {
             console.error(e);
@@ -38,53 +36,56 @@ const getProductLink = (Q) => {
 }
 
 const getWebCode = (link) => {
-    return fetch(link)
+    return fetch(`${proxyUrl}/${link}`)
         .then(res => res.text())
         .then(text => {
             const parser = new DOMParser();
             const htmlDocument = parser.parseFromString(text, "text/html");
             const xpath = "//strong[contains(text(),'Web Code')]";
-            const matchingElement = htmlDocument.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            const matchingElement = htmlDocument.evaluate(xpath, htmlDocument, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
-            console.log(matchingElement.nextSibling)
-            return matchingElement.nextSibling;
+            return matchingElement.nextSibling.innerText;
         })
         .catch((e) => {
             console.error(e);
         });
 }
 
-const getProductInfo = (webCode) => {
-    return fetch(`https://www.bestbuy.ca/api/v2/json/product/${webCode}?&include=all&lang=en-CA`)
-        .then(res => new Response(res.body).json())
-        .then(json => ({
-            name: json.name,
-            regularPrice: json.regularPrice,
-            salePrice: json.salePrice || json.regularPrice,
-            img: json.thumbnailImage,
-            url: json.productUrl
-        }))
-        .catch((e) => {
-            console.error(e);
-        });
+const getProductInfo = async (productLink) => {
+    const webCode = await getWebCode(productLink);
+    if (webCode) {
+        return fetch(`${proxyUrl}/https://www.bestbuy.ca/api/v2/json/product/${webCode}?&include=all&lang=en-CA`)
+            .then(res => new Response(res.body).json())
+            .then(json => ({
+                name: json.name,
+                regularPrice: json.regularPrice,
+                salePrice: json.salePrice || json.regularPrice,
+                img: json.thumbnailImage,
+                url: json.productUrl
+            }))
+            .catch((e) => {
+                console.error(e);
+            });
+    }
 }
 
-window.addEventListener('load', async () => {
+const getProducts = async () => {
     if (window.location.href.includes('https://www.youtube.com/watch')) {
         const query = getQuery(document);
-        const productLink = await getProductLink(query);
-        const webCode = await getWebCode(productLink);
-        const productInfo = await getProductInfo(webCode);
+        const productLinks = await getProductLinks(query);
+        await Promise.all(productLinks.map(async productLink => {
+            const productInfo = await getProductInfo(productLink);
+            if (productInfo) {
+                products.push(productInfo);
+                updateBadge();
+            }
+        }));
 
-        products.push(productInfo);
         updateBadge();
     }
-    // console.log(pageText);
-    // if (pageText.includes("iphone 11")) {
-    //     products.push({ img: "https://multimedia.bbycastatic.ca/multimedia/products/500x500/138/13888/13888819.jpg", url: "https://www.bestbuy.ca/en-ca/product/apple-iphone-11-64gb-purple-unlocked/13888819", name: "iphone 11" });
-    //     updateBadge();
-    // }
-})
+}
+
+window.addEventListener('load', () => getProducts());
 
 chrome.runtime.onMessage.addListener(
     function (msg, sender, sendResponse) {
