@@ -1,18 +1,18 @@
-import { printLine } from './modules/print';
-
 const proxyUrl = 'https://tranquil-oasis-83912.herokuapp.com';
 const products = [];
+
+const youtubeVideoTitleSelector = '.title.style-scope.ytd-video-primary-info-renderer';
 
 const updateBadge = () => {
     chrome.runtime.sendMessage({ type: "SET_BADGE_TEXT", value: products.length > 0 ? products.length.toString() : "" });
 }
 
-updateBadge();
-
 const getQuery = (document) => {
-    const videoTitle = document.querySelector('.title.style-scope.ytd-video-primary-info-renderer').innerText.toLowerCase();
+    const videoTitle = document.querySelector(youtubeVideoTitleSelector).innerText.toLowerCase();
     const index = videoTitle.indexOf('review');
-    return index == -1 ? videoTitle : videoTitle.substring(0, index);
+    const query = index == -1 ? videoTitle : videoTitle.substring(0, index);
+    console.log(`QUERY IS: ${query}`)
+    return query;
 }
 
 const getProductLinks = (Q) => {
@@ -23,12 +23,15 @@ const getProductLinks = (Q) => {
         method: 'GET',
     }
 
-    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=5`, init)
+    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=10`, init)
         .then(res => {
             return new Response(res.body).json()
         })
         .then(res => {
-            return res.items.map(item => item.link);
+            const links = res.items.map(item => item.link);
+            console.log('PRODUCT LINKS:');
+            console.log(links)
+            return links;
         })
         .catch((e) => {
             console.error(e);
@@ -70,22 +73,46 @@ const getProductInfo = async (productLink) => {
 }
 
 const getProducts = async () => {
-    if (window.location.href.includes('https://www.youtube.com/watch')) {
-        const query = getQuery(document);
-        const productLinks = await getProductLinks(query);
-        await Promise.all(productLinks.map(async productLink => {
-            const productInfo = await getProductInfo(productLink);
-            if (productInfo) {
-                products.push(productInfo);
-                updateBadge();
-            }
-        }));
+    const query = getQuery(document);
+    const productLinks = await getProductLinks(query);
+    await Promise.all(productLinks.map(async productLink => {
+        const productInfo = await getProductInfo(productLink);
+        if (productInfo) {
+            products.push(productInfo);
+            updateBadge();
+        }
+    }));
 
-        updateBadge();
+    updateBadge();
+}
+
+const waitForElementToDisplay = (selector, callback, checkFrequencyInMs, timeoutInMs) => {
+    const startTimeInMs = Date.now();
+    (function loopSearch() {
+        if (document.querySelector(selector) != null) {
+            callback();
+            return;
+        } else {
+            console.log(`could not find element ${selector}`);
+            setTimeout(() => {
+                if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs)
+                    return;
+                loopSearch();
+            }, checkFrequencyInMs);
+        }
+    })();
+}
+
+const init = () => {
+    if (window.location.href.includes('https://www.youtube.com/watch')) {
+        waitForElementToDisplay(youtubeVideoTitleSelector, getProducts, 1000);
     }
 }
 
-window.addEventListener('load', () => getProducts());
+// window.onload = init;
+// window.onpopstate = init;
+
+document.addEventListener('yt-navigate-finish', init);
 
 chrome.runtime.onMessage.addListener(
     function (msg, sender, sendResponse) {
