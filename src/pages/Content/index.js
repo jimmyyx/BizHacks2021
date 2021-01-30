@@ -1,5 +1,7 @@
 import { printLine } from './modules/print';
 
+let products = [];
+
 window.addEventListener('load', function () {
     const pageText = document.body.innerText.toLowerCase();
     console.log(pageText);
@@ -7,6 +9,7 @@ window.addEventListener('load', function () {
         chrome.runtime.sendMessage({ type: "SET_BADGE_TEXT", value: "1" }, function (response) {
             return false;
         });
+        products.push("iphone 11");
     }
 })
 
@@ -15,7 +18,7 @@ chrome.runtime.onMessage.addListener(
         console.log("received " + msg.type);
         switch (msg.type) {
             case "GET_PRODUCTS":
-                sendResponse({ products: ["iphone 11"] });
+                sendResponse({ products: products });
                 break;
             default:
                 console.error("unrecognised message: ", msg);
