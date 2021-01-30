@@ -31,7 +31,7 @@ const Popup = () => {
           products.length > 0 ?
             (
               <div>
-                <p>We recognized these products which are available on BestBuy.ca</p>
+                <p>We recognized these products which are available at BestBuy.ca</p>
                 {
                   products.map(function (product, idx) {
                     return (
