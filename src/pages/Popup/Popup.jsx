@@ -15,6 +15,7 @@ const Popup = () => {
       setProducts(response.products);
     });
   });
+
   return (
     <div className="App">
       <header className="App-header">
