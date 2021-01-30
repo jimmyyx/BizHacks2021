@@ -73,6 +73,19 @@ const ProductPopup = () => {
                         <Meta
                           // avatar={<Avatar src={product.img} shape='square' size={100} />}
                           title={product.name}
+                          description={
+                            product.salePrice != product.regularPrice ?
+                              (
+                                <div className="Price">
+                                  <strike>{product.regularPrice}</strike>
+                                  <span>{product.salePrice}</span>
+                                </div>
+                              )
+                              :
+                              (
+                                <span>{product.regularPrice}</span>
+                              )
+                          }
                         />
                       </Card>
                     )

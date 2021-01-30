@@ -32,3 +32,8 @@
   overflow: auto;
   text-overflow: inherit;
 }
+
+.Price {
+  display: flex;
+  justify-content: center;
+}
