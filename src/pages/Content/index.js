@@ -8,17 +8,22 @@ const updateBadge = () => {
 }
 
 const getQuery = (document) => {
-    const videoTitle = document.querySelector(youtubeVideoTitleSelector).innerText.toLowerCase();
-    const index = videoTitle.indexOf('review');
-    const query = index == -1 ? videoTitle : videoTitle.substring(0, index);
-    console.log(`QUERY IS: ${query}`)
-    return query;
+    const element = document.querySelector(youtubeVideoTitleSelector);
+    if (element) {
+        const videoTitle = document.querySelector(youtubeVideoTitleSelector).innerText.toLowerCase();
+        const index = videoTitle.indexOf('review');
+        const query = index == -1 ? videoTitle : videoTitle.substring(0, index);
+        console.log(`QUERY IS: ${query}`)
+        return query;
+    } else {
+        return null;
+    }
 }
 
-const getProductLinks = (Q) => {
-    const KEY = 'AIzaSyD747F8Wq4bALPlpafh3-sU9t3fNtaKT5U';
-    const CX = 'f013e1116c6108d66';
+const KEY = 'AIzaSyD747F8Wq4bALPlpafh3-sU9t3fNtaKT5U';
+const CX = 'f013e1116c6108d66';
 
+const getProductLinks = (Q) => {
     const init = {
         method: 'GET',
     }
@@ -46,8 +51,12 @@ const getWebCode = (link) => {
             const htmlDocument = parser.parseFromString(text, "text/html");
             const xpath = "//strong[contains(text(),'Web Code')]";
             const matchingElement = htmlDocument.evaluate(xpath, htmlDocument, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            const highResImage = htmlDocument.querySelector("img[alt='product image']").getAttribute('src');
 
-            return matchingElement.nextSibling.innerText;
+            return {
+                webCode: matchingElement.nextSibling.innerText,
+                highResImage,
+            };
         })
         .catch((e) => {
             console.error(e);
@@ -55,7 +64,7 @@ const getWebCode = (link) => {
 }
 
 const getProductInfo = async (productLink) => {
-    const webCode = await getWebCode(productLink);
+    const { webCode, highResImage } = await getWebCode(productLink);
     if (webCode) {
         return fetch(`${proxyUrl}/https://www.bestbuy.ca/api/v2/json/product/${webCode}?&include=all&lang=en-CA`)
             .then(res => new Response(res.body).json())
@@ -63,7 +72,7 @@ const getProductInfo = async (productLink) => {
                 name: json.name,
                 regularPrice: json.regularPrice,
                 salePrice: json.salePrice || json.regularPrice,
-                img: json.thumbnailImage,
+                img: highResImage || json.thumbnailImage,
                 url: json.productUrl
             }))
             .catch((e) => {
@@ -72,8 +81,8 @@ const getProductInfo = async (productLink) => {
     }
 }
 
-const getProducts = async () => {
-    const query = getQuery(document);
+const getProducts = async (query) => {
+    // const query = getQuery(document);
     const productLinks = await getProductLinks(query);
     await Promise.all(productLinks.map(async productLink => {
         const productInfo = await getProductInfo(productLink);
@@ -89,17 +98,19 @@ const getProducts = async () => {
 const waitForElementToDisplay = (selector, callback, checkFrequencyInMs, timeoutInMs) => {
     const startTimeInMs = Date.now();
     (function loopSearch() {
-        if (document.querySelector(selector) != null) {
-            callback();
+        const query = getQuery(document);
+        if (query) {
+            callback(query);
             return;
         } else {
             console.log(`could not find element ${selector}`);
-            setTimeout(() => {
-                if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs)
-                    return;
-                loopSearch();
-            }, checkFrequencyInMs);
         }
+        setTimeout(() => {
+            if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) {
+                return;
+            }
+            loopSearch();
+        }, checkFrequencyInMs);
     })();
 }
 
@@ -109,10 +120,21 @@ const init = () => {
     }
 }
 
-// window.onload = init;
+let loaded = false;
+
+window.onload = () => {
+    if (!loaded) {
+        loaded = true;
+        init();
+    }
+};
 // window.onpopstate = init;
 
-document.addEventListener('yt-navigate-finish', init);
+document.addEventListener('yt-navigate-finish', () => {
+    if (loaded) {
+        init();
+    }
+});
 
 chrome.runtime.onMessage.addListener(
     function (msg, sender, sendResponse) {

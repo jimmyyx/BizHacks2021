@@ -48,13 +48,19 @@ const ProductPopup = () => {
                     return (
                       <Card
                         key={idx}
+                        cover={
+                          <img
+                            alt="product image"
+                            src={product.img}
+                          />
+                        }
                         actions={[
                           <CloseOutlined onClick={() => notInterested(idx)}></CloseOutlined>,
                           <ShoppingOutlined onClick={() => viewProduct(product.url)}></ShoppingOutlined>
                         ]}
                         className="Product-card">
                         <Meta
-                          avatar={<Avatar src={product.img} shape='square' size={100} />}
+                          // avatar={<Avatar src={product.img} shape='square' size={100} />}
                           title={product.name}
                         />
                       </Card>
@@ -67,7 +73,7 @@ const ProductPopup = () => {
             (<p>Hi, {user.email}! No products found on this page. Check back later!</p>)
         }
       </header>
-    </div>
+    </div >
   );
 };
 
