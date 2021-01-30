@@ -19,10 +19,16 @@ const Popup = () => {
                 products.map(function (product, idx) {
                   return (
                     <li key={idx}>
-                      <img src={product.img} className="App-image" />
-                      <a className="App-link" href={product.url} target="_blank" rel="noopener noreferrer">
-                        {product.name}
-                      </a>
+                      <div className="Product">
+                        <img src={product.img} className="App-image" />
+                        <a className="App-link" href={product.url} target="_blank" rel="noopener noreferrer">
+                          {product.name}
+                        </a>
+                      </div>
+                      <div className="Product-actions">
+                        <button>Not interested</button>
+                        <button>Add to cart</button>
+                      </div>
                     </li>
                   )
                 })
@@ -31,7 +37,6 @@ const Popup = () => {
             :
             (<p>No products found on this page. Check back later!</p>)
         }
-
       </header>
     </div>
   );
