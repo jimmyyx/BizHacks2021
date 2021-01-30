@@ -1,5 +1,4 @@
 import React from 'react';
-import Greetings from '../../containers/Greetings/Greetings';
 import './Signin.css';
 import logo from '../../assets/img/logo.svg';
 import { Input } from 'antd';
@@ -14,29 +13,33 @@ import Button from "antd-button-color";
 // }
 
 const Signin = () => {
+    const [email, setEmail] = React.useState('');
+
     // const [products, setProducts] = React.useState([]);
     // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     //     chrome.tabs.sendMessage(tabs[0].id, { type: "GET_PRODUCTS" }, function (response) {
     //         setProducts(response.products);
     //     });
     // });
+    const handleSignIn = () => {
+        alert(email);
+    }
+
     return (
         <div className="SigninApp">
             <header className="SigninApp-header">
                 <img src={logo} className="SigninApp-logo" alt="logo" />
                 <div className="SigninApp-displayText">
-
                     <div className="SigninAppFont">Sign In</div>
-                    <div></div>
                     <div className="descriptionFont">Email Address</div>
-                    <Input placeholder="Email" />
+                    <Input placeholder="Email" value={email} onChange={event => setEmail(event.target.value)} />
                     <div className="descriptionFont">Password</div>
                     <Input.Password
                         placeholder="Input Password"
                         iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     />
                     <p></p>
-                    <Button type="primary">Sign In</Button>
+                    <Button type="primary" onClick={handleSignIn}>Sign In</Button>
                     <p></p>
                     <Button type="secondary">Forget Password?</Button>
 
