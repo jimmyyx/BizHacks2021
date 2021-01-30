@@ -1,11 +1,19 @@
 import React from 'react';
-import Greetings from '../../containers/Greetings/Greetings';
+import { Card } from 'antd';
+import { CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
 import './Popup.css';
+import Avatar from 'antd/lib/avatar/avatar';
+
+const { Meta } = Card;
 
 const notInterested = (idx) => {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.sendMessage(tabs[0].id, { type: "NOT_INTERESTED", idx: idx });
   });
+}
+
+const viewProduct = (url) => {
+  chrome.tabs.create({ url: url })
 }
 
 const Popup = () => {
@@ -24,26 +32,24 @@ const Popup = () => {
             (
               <div>
                 <p>We recognized these products which are available on BestBuy.ca</p>
-                <ul className="no-bullets">
-                  {
-                    products.map(function (product, idx) {
-                      return (
-                        <li key={idx} className="List-element">
-                          <div className="Product">
-                            <img src={product.img} className="App-image" />
-                            <a className="App-link" href={product.url} target="_blank" rel="noopener noreferrer">
-                              {product.name}
-                            </a>
-                          </div>
-                          <div className="Product-actions">
-                            <button onClick={() => notInterested(idx)}>Not interested</button>
-                            <button>Add to cart</button>
-                          </div>
-                        </li>
-                      )
-                    })
-                  }
-                </ul>
+                {
+                  products.map(function (product, idx) {
+                    return (
+                      <Card
+                        key={idx}
+                        actions={[
+                          <CloseOutlined onClick={() => notInterested(idx)}></CloseOutlined>,
+                          <ShoppingOutlined onClick={() => viewProduct(product.url)}></ShoppingOutlined>
+                        ]}
+                        className="Product-card">
+                        <Meta
+                          avatar={<Avatar src={product.img} shape='square' size='large' />}
+                          title={product.name}
+                        />
+                      </Card>
+                    )
+                  })
+                }
               </div>
             )
             :
