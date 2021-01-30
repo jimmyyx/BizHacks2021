@@ -9,14 +9,15 @@
   text-align: center;
   height: 100%;
   padding: 10px;
-  background-color: #282c34;
+  background-color: #0046BF;
   overflow-y: scroll;
 }
 
 .App-header {
   font-size: calc(10px + 2vmin);
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   color: white;
+  font-weight: 900;
 }
 
 .Product-card {

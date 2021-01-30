@@ -6,4 +6,4 @@ import Signin from './Signin';
 import Cashback from './Cashback';
 import './index.css';
 
-render(<Cashback />, window.document.querySelector('#app-container'));
+render(<Signin />, window.document.querySelector('#app-container'));

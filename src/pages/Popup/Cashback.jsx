@@ -14,7 +14,7 @@ const Cashback = () => {
                     <div className="flexbox-container">
                         <img src={yellowLogo} className="CashbackApp-logo" alt="logo" />
                         <div className="buttonPadding">
-                            <Button type="primary" shape="round">Activate 5% Cash Back</Button>
+                            <Button type="cashback" shape="round">Activate 5% Cash Back</Button>
                         </div>
                     </div>
                 </div>
