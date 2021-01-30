@@ -4,7 +4,7 @@
   bottom: 0px;
   left: 0px;
   right: 0px;
-  text-align: left;
+  text-align: center;
   height: 160%;
   padding: 10px;
   background-color: #0046BF;
@@ -25,7 +25,7 @@
 .SigninAppFont {
   font-family: 'Roboto', sans-serif;
   font-size: 35px;
-  font-weight: 900;
+  font-weight: 400;
   color: #FEEF22;
   padding-top: 0;
   vertical-align: top;
@@ -70,14 +70,14 @@ ul.no-bullets {
 .ant-btn-primary {
   background-color: #FEEF22;
   color: black;
-  font-weight: 900;
+  font-weight: 400;
 }
 
 .ant-btn-secondary {
   color: #0046BF;
-  font-weight: 900;
+  font-weight: 400;
 }
 
 .descriptionFont {
-  font-weight: 900;
+  font-weight: 400;
 }

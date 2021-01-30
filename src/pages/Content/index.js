@@ -123,7 +123,7 @@ chrome.runtime.onMessage.addListener(
         console.log("received " + msg.type);
         switch (msg.type) {
             case "GET_PRODUCTS":
-                sendResponse({ products: products });
+                sendResponse({ products });
                 break;
             case "NOT_INTERESTED":
                 products.splice(msg.idx, 1);

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from 'antd';
 import { CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
-import './Popup.css';
+import './ProductPopup.css';
 import Avatar from 'antd/lib/avatar/avatar';
 
 const { Meta } = Card;
@@ -16,13 +16,24 @@ const viewProduct = (url) => {
   chrome.tabs.create({ url: url })
 }
 
-const Popup = () => {
+const ProductPopup = () => {
   const [products, setProducts] = React.useState([]);
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { type: "GET_PRODUCTS" }, function (response) {
-      setProducts(response.products);
-    });
-  });
+  const [user, setUser] = React.useState({});
+  useEffect(() => {
+    const getData = async () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { type: "GET_PRODUCTS" }, function (response) {
+          setProducts(response.products);
+        });
+
+        chrome.runtime.sendMessage({ type: "GET_USER" }, (response) => {
+          setUser(response);
+        });
+      })
+    }
+    getData();
+  }, [])
+
 
   return (
     <div className="App">
@@ -31,7 +42,7 @@ const Popup = () => {
           products.length > 0 ?
             (
               <div>
-                <p>We recognized these products which are available at BestBuy.ca</p>
+                <p>Hi, {user.email}! We recognized these products which are available at BestBuy.ca</p>
                 {
                   products.map(function (product, idx) {
                     return (
@@ -59,11 +70,11 @@ const Popup = () => {
               </div>
             )
             :
-            (<p>No products found on this page. Check back later!</p>)
+            (<p>Hi, {user.email}! No products found on this page. Check back later!</p>)
         }
       </header>
     </div >
   );
 };
 
-export default Popup;
+export default ProductPopup;
