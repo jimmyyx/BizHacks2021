@@ -13,7 +13,6 @@ window.addEventListener('load', function () {
     console.log(pageText);
     if (pageText.includes("iphone 11")) {
         products.push({ img: "https://multimedia.bbycastatic.ca/multimedia/products/500x500/138/13888/13888819.jpg", url: "https://www.bestbuy.ca/en-ca/product/apple-iphone-11-64gb-purple-unlocked/13888819", name: "iphone 11" });
-        products.push({ img: "https://multimedia.bbycastatic.ca/multimedia/products/500x500/138/13888/13888819.jpg", url: "https://www.bestbuy.ca/en-ca/product/apple-iphone-11-64gb-purple-unlocked/13888819", name: "iphone 11" });
         updateBadge();
     }
 })
