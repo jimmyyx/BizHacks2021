@@ -1,6 +1,5 @@
 import { printLine } from './modules/print';
 
-printLine('Content script works!');
 window.addEventListener('load', function () {
     const pageText = document.body.innerText.toLowerCase();
     console.log(pageText);
@@ -10,3 +9,16 @@ window.addEventListener('load', function () {
         });
     }
 })
+
+chrome.runtime.onMessage.addListener(
+    function (msg, sender, sendResponse) {
+        console.log("received " + msg.type);
+        switch (msg.type) {
+            case "GET_PRODUCTS":
+                sendResponse({ products: ["iphone 11"] });
+                break;
+            default:
+                console.error("unrecognised message: ", msg);
+        }
+    }
+);
