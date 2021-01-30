@@ -25,15 +25,25 @@ const ProductPopup = () => {
         chrome.tabs.sendMessage(tabs[0].id, { type: "GET_PRODUCTS" }, function (response) {
           setProducts(response.products);
         });
+      });
 
-        chrome.runtime.sendMessage({ type: "GET_USER" }, (response) => {
-          setUser(response);
-        });
-      })
+      chrome.runtime.sendMessage({ type: "GET_USER" }, (response) => {
+        setUser(response);
+      });
     }
     getData();
-  }, [])
+  }, []);
 
+  chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+    console.log("received " + msg.type);
+    switch (msg.type) {
+      case "PRODUCTS_UPDATED":
+        setProducts(msg.products);
+        break;
+      default:
+        console.error("unrecognised message: ", msg);
+    }
+  });
 
   return (
     <div className="App">

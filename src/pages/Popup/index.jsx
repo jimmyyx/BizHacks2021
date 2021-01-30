@@ -7,7 +7,7 @@ import Cashback from './Cashback';
 import './index.css';
 
 const Popup = () => {
-    const [user, setUser] = React.useState({});
+    const [user, setUser] = React.useState();
 
     useEffect(() => {
         const getData = async () => {

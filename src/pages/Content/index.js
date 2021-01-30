@@ -88,11 +88,13 @@ const getProducts = async (query) => {
         const productInfo = await getProductInfo(productLink);
         if (productInfo && !products.some((product) => product.url == productInfo.url)) {
             products.push(productInfo);
+            chrome.runtime.sendMessage({ type: "PRODUCTS_UPDATED", products: products })
             updateBadge();
         }
     }));
 
     updateBadge();
+    chrome.runtime.sendMessage({ type: "PRODUCTS_UPDATED", products: products })
 }
 
 const waitForElementToDisplay = (selector, callback, checkFrequencyInMs, timeoutInMs) => {
@@ -146,6 +148,7 @@ chrome.runtime.onMessage.addListener(
             case "NOT_INTERESTED":
                 products.splice(msg.idx, 1);
                 updateBadge();
+                chrome.runtime.sendMessage({ type: "PRODUCTS_UPDATED", products: products })
                 break;
             default:
                 console.error("unrecognised message: ", msg);
