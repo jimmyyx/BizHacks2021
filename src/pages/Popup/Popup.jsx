@@ -12,12 +12,12 @@ const Popup = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <ul>
+        <ul className="no-bullets">
           {
             products.map(function (product, idx) {
               return (
                 <li key={idx}>
-                  <img src={product.img} className="App-logo" alt="logo" />
+                  <img src={product.img} className="App-image" />
                   <a className="App-link" href={product.url} target="_blank" rel="noopener noreferrer">
                     {product.name}
                   </a>
