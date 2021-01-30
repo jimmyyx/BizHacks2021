@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Card } from 'antd';
-import { ArrowRightOutlined, CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { LinkOutlined, CloseOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import './ProductPopup.css';
 import Avatar from 'antd/lib/avatar/avatar';
 
@@ -66,8 +66,8 @@ const ProductPopup = () => {
                         }
                         actions={[
                           <CloseOutlined onClick={() => notInterested(idx)}></CloseOutlined>,
-                          <ArrowRightOutlined onClick={() => viewProduct(product.url)} />,
-                          <ShoppingOutlined />
+                          <LinkOutlined onClick={() => viewProduct(product.url)} />,
+                          <ShoppingCartOutlined />
                         ]}
                         className="Product-card">
                         <Meta
