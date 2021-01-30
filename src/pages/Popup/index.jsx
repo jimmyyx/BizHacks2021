@@ -27,11 +27,11 @@ const Popup = () => {
         setPopUpState(msg.popUpState);
     });
 
-    if (popUpState == POPUP_STATES.product) {
-        return <ProductPopup />;
-    } else {
-        return <Signin />;
-    }
+    // if (popUpState == POPUP_STATES.product) {
+    return <ProductPopup />;
+    // } else {
+    // return <Signin />;
+    // }
 }
 
 render(<Popup />, window.document.querySelector('#app-container'));
