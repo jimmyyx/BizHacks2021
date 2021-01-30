@@ -46,8 +46,12 @@ const getWebCode = (link) => {
             const htmlDocument = parser.parseFromString(text, "text/html");
             const xpath = "//strong[contains(text(),'Web Code')]";
             const matchingElement = htmlDocument.evaluate(xpath, htmlDocument, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            const highResImage = htmlDocument.querySelector("img[alt='product image']").getAttribute('src');;
 
-            return matchingElement.nextSibling.innerText;
+            return [
+                matchingElement.nextSibling.innerText,
+                highResImage,
+            ]
         })
         .catch((e) => {
             console.error(e);
@@ -55,7 +59,7 @@ const getWebCode = (link) => {
 }
 
 const getProductInfo = async (productLink) => {
-    const webCode = await getWebCode(productLink);
+    const { webCode, highResImage } = await getWebCode(productLink);
     if (webCode) {
         return fetch(`${proxyUrl}/https://www.bestbuy.ca/api/v2/json/product/${webCode}?&include=all&lang=en-CA`)
             .then(res => new Response(res.body).json())
@@ -63,7 +67,7 @@ const getProductInfo = async (productLink) => {
                 name: json.name,
                 regularPrice: json.regularPrice,
                 salePrice: json.salePrice || json.regularPrice,
-                img: json.thumbnailImage,
+                img: highResImage || json.thumbnailImage,
                 url: json.productUrl
             }))
             .catch((e) => {
