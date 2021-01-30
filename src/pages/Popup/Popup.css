@@ -13,26 +13,11 @@
   overflow-y: scroll;
 }
 
-.App-image {
-  max-height: 100px;
-  max-width: 100px;
-  pointer-events: none;
-}
-
 .App-header {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: left;
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 .Product-card {
-  margin-top: 20px
+  margin-bottom: 20px
 }

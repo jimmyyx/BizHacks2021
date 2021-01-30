@@ -43,7 +43,7 @@ const Popup = () => {
                         ]}
                         className="Product-card">
                         <Meta
-                          avatar={<Avatar src={product.img} shape='square' size='large' />}
+                          avatar={<Avatar src={product.img} shape='square' size={100} />}
                           title={product.name}
                         />
                       </Card>
