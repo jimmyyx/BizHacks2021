@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Card } from 'antd';
-import { CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
 import './ProductPopup.css';
 import Avatar from 'antd/lib/avatar/avatar';
 
@@ -52,7 +52,7 @@ const ProductPopup = () => {
           products.length > 0 ?
             (
               <div>
-                <p>Hi, {user.email}! We recognized these products which are available at BestBuy.ca</p>
+                <p className="popup-header">Hi, {user.email}! We recognized these products which are available at BestBuy.ca</p>
                 {
                   products.map(function (product, idx) {
                     return (
@@ -66,7 +66,8 @@ const ProductPopup = () => {
                         }
                         actions={[
                           <CloseOutlined onClick={() => notInterested(idx)}></CloseOutlined>,
-                          <ShoppingOutlined onClick={() => viewProduct(product.url)}></ShoppingOutlined>
+                          <ArrowRightOutlined onClick={() => viewProduct(product.url)} />,
+                          <ShoppingOutlined />
                         ]}
                         className="Product-card">
                         <Meta
@@ -80,7 +81,7 @@ const ProductPopup = () => {
               </div>
             )
             :
-            (<p>Hi, {user.email}! No products found on this page. Check back later!</p>)
+            (<p className="popup-header">Hi, {user.email}! No products found on this page. Check back later!</p>)
         }
       </header>
     </div >

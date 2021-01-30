@@ -53,10 +53,6 @@ ul.no-bullets {
   font-weight: 900;
 }
 
-.descriptionFont {
-  font-weight: 900;
-}
-
 .flexbox-container {
   display: flex;
   flex-direction: row;
