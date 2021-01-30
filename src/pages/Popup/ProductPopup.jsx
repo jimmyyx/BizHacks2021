@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from 'antd';
 import { CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
 import './ProductPopup.css';
@@ -19,15 +19,21 @@ const viewProduct = (url) => {
 const ProductPopup = () => {
   const [products, setProducts] = React.useState([]);
   const [user, setUser] = React.useState({});
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { type: "GET_PRODUCTS" }, function (response) {
-      setProducts(response.products);
-    });
+  useEffect(() => {
+    const getData = async () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { type: "GET_PRODUCTS" }, function (response) {
+          setProducts(response.products);
+        });
 
-    chrome.tabs.sendMessage(tabs[0].id, { type: "GET_USER" }, (response) => {
-      setUser(response);
-    });
-  });
+        chrome.runtime.sendMessage({ type: "GET_USER" }, (response) => {
+          setUser(response);
+        });
+      })
+    }
+    getData();
+  }, [])
+
 
   return (
     <div className="App">

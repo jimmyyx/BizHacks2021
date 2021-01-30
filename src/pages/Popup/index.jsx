@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 
 import ProductPopup from './ProductPopup';
@@ -14,11 +14,14 @@ const POPUP_STATES = Object.freeze({
 const Popup = () => {
     const [popUpState, setPopUpState] = React.useState(POPUP_STATES.signIn);
 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, { type: "GET_POPUP_STATE" }, (response) => {
-            setPopUpState(response);
-        });
-    });
+    useEffect(() => {
+        const getData = async () => {
+            chrome.runtime.sendMessage({ type: "GET_POPUP_STATE" }, (response) => {
+                setPopUpState(response);
+            });
+        }
+        getData();
+    }, []);
 
     chrome.runtime.onMessage.addListener((msg) => {
         setPopUpState(msg.popUpState);
