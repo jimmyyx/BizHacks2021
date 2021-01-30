@@ -7,7 +7,7 @@ window.addEventListener('unload', function () {
     });
 });
 
-export const POPUP_STATES = Object.freeze({
+const POPUP_STATES = Object.freeze({
     signIn: 'SIGN_IN',
     product: 'PRODUCT',
 });
@@ -26,6 +26,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
                 email: msg.value.email
             };
             popUpState = POPUP_STATES.product;
+            chrome.runtime.sendMessage({ popUpState });
             break;
         case 'GET_USER':
             sendResponse(user);

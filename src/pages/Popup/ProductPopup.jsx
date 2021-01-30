@@ -58,7 +58,7 @@ const ProductPopup = () => {
               </div>
             )
             :
-            (<p>No products found on this page. Check back later!</p>)
+            (<p>Hi, {user.email}! No products found on this page. Check back later!</p>)
         }
       </header>
     </div>
