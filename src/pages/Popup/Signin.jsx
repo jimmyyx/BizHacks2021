@@ -2,6 +2,10 @@ import React from 'react';
 import Greetings from '../../containers/Greetings/Greetings';
 import './Signin.css';
 import logo from '../../assets/img/logo.svg';
+import { Input, Space } from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import Button from "antd-button-color";
+
 
 // const notInterested = (idx) => {
 //     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -24,23 +28,21 @@ const Signin = () => {
 
                     <div className="SigninAppFont">Sign In</div>
                     <div></div>
-                    <div>Email Address</div>
+                    <div className="descriptionFont">Email Address</div>
+                    <Input placeholder="Email" />
+                    <div className="descriptionFont">Password</div>
+                    <Input.Password
+                        placeholder="Input Password"
+                        iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                    />
+                    <p></p>
+                    <Button type="primary">Sign In</Button>
+                    <p></p>
+                    <Button type="secondary">Forget Password?</Button>
 
-                    <div>Password</div>
-                    <div>
-                        Testing
-                    </div>
-                    <a
-                        className="SigninApp-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
                 </div>
             </header>
-        </div>
+        </div >
     );
 };
 

@@ -66,3 +66,18 @@ ul.no-bullets {
   display: flex;
   flex-direction: column;
 }
+
+.ant-btn-primary {
+  background-color: #FEEF22;
+  color: black;
+  font-weight: 900;
+}
+
+.ant-btn-secondary {
+  color: #0046BF;
+  font-weight: 900;
+}
+
+.descriptionFont {
+  font-weight: 900;
+}

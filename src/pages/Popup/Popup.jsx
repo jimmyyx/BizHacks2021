@@ -1,6 +1,20 @@
 import React from 'react';
-import Greetings from '../../containers/Greetings/Greetings';
+import { Card } from 'antd';
+import { CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
 import './Popup.css';
+import Avatar from 'antd/lib/avatar/avatar';
+
+const { Meta } = Card;
+
+const notInterested = (idx) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { type: "NOT_INTERESTED", idx: idx });
+  });
+}
+
+const viewProduct = (url) => {
+  chrome.tabs.create({ url: url })
+}
 
 const Popup = () => {
   const [products, setProducts] = React.useState([]);
@@ -9,31 +23,35 @@ const Popup = () => {
       setProducts(response.products);
     });
   });
+
   return (
     <div className="App">
       <header className="App-header">
         {
           products.length > 0 ?
-            (<ul className="no-bullets">
-              {
-                products.map(function (product, idx) {
-                  return (
-                    <li key={idx}>
-                      <div className="Product">
-                        <img src={product.img} className="App-image" />
-                        <a className="App-link" href={product.url} target="_blank" rel="noopener noreferrer">
-                          {product.name}
-                        </a>
-                      </div>
-                      <div className="Product-actions">
-                        <button>Not interested</button>
-                        <button>Add to cart</button>
-                      </div>
-                    </li>
-                  )
-                })
-              }
-            </ul>)
+            (
+              <div>
+                <p>We recognized these products which are available at BestBuy.ca</p>
+                {
+                  products.map(function (product, idx) {
+                    return (
+                      <Card
+                        key={idx}
+                        actions={[
+                          <CloseOutlined onClick={() => notInterested(idx)}></CloseOutlined>,
+                          <ShoppingOutlined onClick={() => viewProduct(product.url)}></ShoppingOutlined>
+                        ]}
+                        className="Product-card">
+                        <Meta
+                          avatar={<Avatar src={product.img} shape='square' size={100} />}
+                          title={product.name}
+                        />
+                      </Card>
+                    )
+                  })
+                }
+              </div>
+            )
             :
             (<p>No products found on this page. Check back later!</p>)
         }
