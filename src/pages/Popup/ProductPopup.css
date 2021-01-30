@@ -27,3 +27,8 @@
 .popup-header {
   text-shadow: 1px 1px black;
 }
+
+.ant-card-meta-title {
+  overflow: auto;
+  text-overflow: inherit;
+}
