@@ -2,7 +2,7 @@ import React from 'react';
 import Greetings from '../../containers/Greetings/Greetings';
 import './Signin.css';
 import logo from '../../assets/img/logo.svg';
-import { Input, Space } from 'antd';
+import { Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Button from "antd-button-color";
 
