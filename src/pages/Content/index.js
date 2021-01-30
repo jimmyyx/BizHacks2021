@@ -23,11 +23,17 @@ const getProductLink = (Q) => {
     }
 
     return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=1`, init)
-        .then(res => new Response(res.body).json())
+        .then(res => {
+            console.log(res)
+            return new Response(res.body).json()
+        })
         .then(res => {
             console.log(res.items)
 
             return res.items[0].link;
+        })
+        .catch((e) => {
+            console.error(e);
         });
 }
 
@@ -42,6 +48,9 @@ const getWebCode = (link) => {
 
             console.log(matchingElement.nextSibling)
             return matchingElement.nextSibling;
+        })
+        .catch((e) => {
+            console.error(e);
         });
 }
 
@@ -54,7 +63,10 @@ const getProductInfo = (webCode) => {
             salePrice: json.salePrice || json.regularPrice,
             img: json.thumbnailImage,
             url: json.productUrl
-        }));
+        }))
+        .catch((e) => {
+            console.error(e);
+        });
 }
 
 window.addEventListener('load', async () => {
@@ -62,7 +74,7 @@ window.addEventListener('load', async () => {
         const query = getQuery(document);
         const productLink = await getProductLink(query);
         const webCode = await getWebCode(productLink);
-        const productInfo = await getProductInfo(productLink);
+        const productInfo = await getProductInfo(webCode);
 
         products.push(productInfo);
         updateBadge();
