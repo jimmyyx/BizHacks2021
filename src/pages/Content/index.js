@@ -51,11 +51,13 @@ const getWebCode = (link) => {
             const htmlDocument = parser.parseFromString(text, "text/html");
             const xpath = "//strong[contains(text(),'Web Code')]";
             const matchingElement = htmlDocument.evaluate(xpath, htmlDocument, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            const highResImage = htmlDocument.querySelector("img[alt='product image']").getAttribute('src');
+
+            const imgElement = htmlDocument.querySelector("img[alt='product image']")
+            const highResImage = imgElement ? imgElement.getAttribute('src') : null;
 
             return {
                 webCode: matchingElement.nextSibling.innerText,
-                highResImage,
+                highResImage
             };
         })
         .catch((e) => {
