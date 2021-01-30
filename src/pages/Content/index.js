@@ -23,7 +23,7 @@ const getProductLinks = (Q) => {
         method: 'GET',
     }
 
-    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=5`, init)
+    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=10`, init)
         .then(res => {
             return new Response(res.body).json()
         })
