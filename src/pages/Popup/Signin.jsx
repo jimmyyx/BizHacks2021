@@ -22,7 +22,12 @@ const Signin = () => {
     //     });
     // });
     const handleSignIn = () => {
-        alert(email);
+        chrome.runtime.sendMessage({
+            type: 'SIGN_IN',
+            value: {
+                email
+            },
+        });
     }
 
     return (
