@@ -8,6 +8,7 @@
   height: 100%;
   padding: 10px;
   background-color: #282c34;
+  overflow-y: scroll;
 }
 
 .App-image {
@@ -37,5 +38,6 @@ ul.no-bullets {
 }
 
 .List-element {
-  display: flex
+  display: flex;
+  margin-top: 20px
 }
