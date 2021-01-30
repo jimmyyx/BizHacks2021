@@ -20,26 +20,31 @@ const Popup = () => {
       <header className="App-header">
         {
           products.length > 0 ?
-            (<ul className="no-bullets">
-              {
-                products.map(function (product, idx) {
-                  return (
-                    <li key={idx}>
-                      <div className="Product">
-                        <img src={product.img} className="App-image" />
-                        <a className="App-link" href={product.url} target="_blank" rel="noopener noreferrer">
-                          {product.name}
-                        </a>
-                      </div>
-                      <div className="Product-actions">
-                        <button onClick={() => notInterested(idx)}>Not interested</button>
-                        <button>Add to cart</button>
-                      </div>
-                    </li>
-                  )
-                })
-              }
-            </ul>)
+            (
+              <div>
+                <p>We recognized these products which are available on BestBuy.ca</p>
+                <ul className="no-bullets">
+                  {
+                    products.map(function (product, idx) {
+                      return (
+                        <li key={idx} className="List-element">
+                          <div className="Product">
+                            <img src={product.img} className="App-image" />
+                            <a className="App-link" href={product.url} target="_blank" rel="noopener noreferrer">
+                              {product.name}
+                            </a>
+                          </div>
+                          <div className="Product-actions">
+                            <button onClick={() => notInterested(idx)}>Not interested</button>
+                            <button>Add to cart</button>
+                          </div>
+                        </li>
+                      )
+                    })
+                  }
+                </ul>
+              </div>
+            )
             :
             (<p>No products found on this page. Check back later!</p>)
         }
