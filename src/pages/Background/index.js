@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     switch (msg.type) {
         case "SET_BADGE_TEXT":
             chrome.browserAction.setBadgeText({ text: msg.value, tabId: sender.tab.id });
-            break
+            break;
         default:
             console.error("unrecognised message: ", msg);
     }
