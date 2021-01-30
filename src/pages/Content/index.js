@@ -23,7 +23,7 @@ const getProductLinks = (Q) => {
         method: 'GET',
     }
 
-    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=10`, init)
+    return fetch(`https://www.googleapis.com/customsearch/v1?key=${KEY}&cx=${CX}&q=${Q}&num=3`, init)
         .then(res => {
             return new Response(res.body).json()
         })
@@ -77,7 +77,7 @@ const getProducts = async () => {
     const productLinks = await getProductLinks(query);
     await Promise.all(productLinks.map(async productLink => {
         const productInfo = await getProductInfo(productLink);
-        if (productInfo) {
+        if (productInfo && !products.some((product) => product.url == productInfo.url)) {
             products.push(productInfo);
             updateBadge();
         }
