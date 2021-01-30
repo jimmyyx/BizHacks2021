@@ -20,11 +20,17 @@
     animation: App-logo-spin infinite 20s linear;
   }
 } */
-/* 
-@font-face {
-  font-family: 'HumanBBY-75Bold-Web.woff2';
-  src: local('HumanBBY-75Bold-Web.woff2'), url(../../fonts/HumanBBY-75Bold-Web.woff2) format('woff');
+
+/* @font-face {
+  font-family: 'Roboto';
+  src: local('Roboto'), url(../../fonts/Roboto/Roboto-Bold.tff) format('tff');
 } */
+
+.App-image {
+  max-height: 100px;
+  max-width: 100px;
+  pointer-events: none;
+}
 
 .App-header {
   height: 100%;
@@ -41,11 +47,8 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+ul.no-bullets {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
