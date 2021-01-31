@@ -90,11 +90,13 @@ const getProducts = async (query) => {
         const productInfo = await getProductInfo(productLink);
         if (productInfo && !products.some((product) => product.url == productInfo.url)) {
             products.push(productInfo);
+            chrome.runtime.sendMessage({ type: "PRODUCTS_UPDATED", products: products })
             updateBadge();
         }
     }));
 
     updateBadge();
+    chrome.runtime.sendMessage({ type: "PRODUCTS_UPDATED", products: products })
 }
 
 const waitForElementToDisplay = (selector, callback, checkFrequencyInMs, timeoutInMs) => {
@@ -117,6 +119,7 @@ const waitForElementToDisplay = (selector, callback, checkFrequencyInMs, timeout
 }
 
 const init = () => {
+    if (chrome.runtime.id == undefined) return;
     if (window.location.href.includes('https://www.youtube.com/watch')) {
         waitForElementToDisplay(youtubeVideoTitleSelector, getProducts, 1000);
     }
