@@ -1,5 +1,4 @@
-# BizHacks2021
-# Team 16, Everest Consulting
+# BizHacks2021 Team 16, Everest Consulting
 
 # View our Project on Youtube
 [![BizHacks 2021 Pitch/Demo](https://img.youtube.com/vi/L08mDZDVuSg/0.jpg)](https://www.youtube.com/watch?v=L08mDZDVuSg&feature=youtu.be)
